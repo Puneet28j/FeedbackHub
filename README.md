@@ -241,4 +241,4 @@ Upvote or remove upvote from a feedback (requires JWT).
 
 ## 6. No-AI Statement
 
-Some AI tools were used for research and to speed up development, but all code and documentation were written, reviewed, and finalized
+Some AI tools were used for research and to speed up development, but all code and documentation were written, reviewed, and finalized by me
