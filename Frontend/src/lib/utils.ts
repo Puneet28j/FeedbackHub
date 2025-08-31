@@ -18,3 +18,17 @@ export const getCategoryBadgeColors = (category: Category) => {
       return "bg-gray-100 text-gray-800";
   }
 };
+
+export const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+export const seeMore = (text: string) => {
+  if (text.length <= 150) return text;
+  return text.slice(0, 150) + "... see more";
+};

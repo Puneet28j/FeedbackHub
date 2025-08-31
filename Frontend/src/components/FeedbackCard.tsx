@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCategoryBadgeColors } from "@/lib/utils";
+import { formatDate, getCategoryBadgeColors, seeMore } from "@/lib/utils";
 import type { Feedback } from "@/Types";
 import { ThumbsUp } from "lucide-react";
 import { useState } from "react";
-import { Badge } from "./ui/badge";
 import { toast } from "sonner";
+import { Badge } from "./ui/badge";
 
 const FeedbackCard = (fb: Feedback) => {
+  const [showFullText, setShowFullText] = useState(false);
+
   const [upvoters, setUpvoters] = useState(fb.upvoters);
 
   const userId = localStorage.getItem("userId") || "";
@@ -16,7 +18,7 @@ const FeedbackCard = (fb: Feedback) => {
   const handleUpvote = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/feedbacks/${fb._id}/upvote`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks/${fb._id}/upvote`,
         {
           method: "POST",
           headers: {
@@ -40,7 +42,6 @@ const FeedbackCard = (fb: Feedback) => {
       console.error("Error upvoting:", error);
     }
   };
-
   return (
     <Card
       key={fb._id}
@@ -70,11 +71,24 @@ const FeedbackCard = (fb: Feedback) => {
         </div>
       </CardHeader>
 
-      <CardContent className="pb-4 flex flex-col gap-4">
-        <p className="text-sm text-zinc-300">{fb.description}</p>
+      <CardContent className=" flex flex-col gap-4">
+        <p className="text-sm text-zinc-300">
+          {showFullText ? fb.description : seeMore(fb.description)}
+          {fb.description.length > 150 && (
+            <button
+              className="text-blue-500 ml-1 text-xs underline"
+              onClick={() => setShowFullText(!showFullText)}
+            >
+              {showFullText ? "See Less" : "See More"}
+            </button>
+          )}
+        </p>
 
         {/* Upvote Section */}
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+          <p className="text-sm text-zinc-300 font-bold">
+            {formatDate(fb.createdAt!)}
+          </p>
           <button
             onClick={handleUpvote}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium shadow-sm transition-all

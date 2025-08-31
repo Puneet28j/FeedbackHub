@@ -17,10 +17,9 @@ export default function FeedbackPage({ refreshTrigger }: FeedbackPageProps) {
     if (category && category !== "All") params.append("category", category);
     if (sortBy) params.append("sortBy", sortBy);
     if (groupBy) params.append("groupBy", groupBy);
-
     try {
       const res = await fetch(
-        `http://localhost:5000/api/feedbacks?${params.toString()}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks?${params.toString()}`
       );
       const data = await res.json();
 
@@ -68,7 +67,13 @@ export default function FeedbackPage({ refreshTrigger }: FeedbackPageProps) {
       />
 
       {/* Feedback List */}
-      <FeedbackList feedbacks={feedbacks} grouped={grouped} groupBy={groupBy} />
+      <FeedbackList
+        feedbacks={feedbacks}
+        grouped={grouped}
+        groupBy={groupBy}
+        search={search}
+        category={category}
+      />
     </div>
   );
 }

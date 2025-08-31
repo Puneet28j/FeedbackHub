@@ -5,6 +5,8 @@ export interface Feedback {
   category: "Bug" | "Improvement" | "Feature";
   upvoters?: string[];
   user?: { _id: string; name: string; email: string };
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface FeedbackPageProps {
@@ -14,6 +16,8 @@ export interface FeedbackListProps {
   feedbacks: Feedback[];
   grouped: Record<string, Feedback[]>;
   groupBy: string;
+  search: string;
+  category: string;
 }
 
 export interface FeedbackControlsProps {

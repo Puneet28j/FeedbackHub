@@ -35,14 +35,17 @@ export default function CreateFeedbackModal({
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/feedbacks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ title, description, category }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ title, description, category }),
+        }
+      );
 
       if (res.ok) {
         const newFeedback = await res.json();
