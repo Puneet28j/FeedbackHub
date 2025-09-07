@@ -42,6 +42,11 @@ export const getFeedbacks = async (req: Request, res: Response) => {
   try {
     const { sortBy, category, search, groupBy } = req.query;
 
+    // --- Pagination ---
+    const page = parseInt((req.query.page as string) || "1", 10);
+    const limit = parseInt((req.query.limit as string) || "10", 10);
+    const skip = (page - 1) * limit;
+
     // --- Sorting ---
     let sortOption: Record<string, SortOrder> = { createdAt: "desc" }; // default newest
     if (sortBy === "oldest") {
@@ -57,10 +62,15 @@ export const getFeedbacks = async (req: Request, res: Response) => {
       filter.title = { $regex: search, $options: "i" }; // case-insensitive search
     }
 
+    // --- Count total for pagination meta ---
+    const total = await Feedback.countDocuments(filter);
+
     // --- Normal Query ---
     const feedbacks = await Feedback.find(filter)
       .populate("user", "name email") // get user details
-      .sort(sortOption);
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit);
 
     // --- Grouping (if needed) ---
     if (groupBy === "category") {
@@ -71,10 +81,26 @@ export const getFeedbacks = async (req: Request, res: Response) => {
         grouped[fb.category].push(fb);
       });
 
-      return res.json({ grouped });
+      return res.json({
+        grouped,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      });
     }
 
-    res.json({ feedbacks });
+    res.json({
+      feedbacks,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
