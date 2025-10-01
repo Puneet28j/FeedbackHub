@@ -11,20 +11,20 @@ dotenv.config();
 connectDB();
 const app = express();
 
-// Prevent idling on free hosting on render free tier
-const url = `https://feedbackhub-mx6f.onrender.com`;
-const interval = 30000;
+// // Prevent idling on free hosting on render free tier
+// const url = `https://feedbackhub-mx6f.onrender.com`;
+// const interval = 30000;
 
-const reload = async () => {
-  try {
-    await fetch(url);
-    console.log(`Reloaded: ${new Date().toISOString()}`);
-  } catch (error) {
-    console.error("Error reloading:", error);
-  }
-};
+// const reload = async () => {
+//   try {
+//     await fetch(url);
+//     console.log(`Reloaded: ${new Date().toISOString()}`);
+//   } catch (error) {
+//     console.error("Error reloading:", error);
+//   }
+// };
 
-setInterval(reload, interval);
+// setInterval(reload, interval);
 
 const PORT = process.env.PORT || 5000;
 
